@@ -10,6 +10,8 @@ services:
       - "6379:6379"
     volumes:
       - ./redis_db:/var/lib/redis/data
+    networks:
+      - app-network
     command:
       - /bin/sh
       - -c
@@ -22,9 +24,15 @@ services:
       - dev.env
     ports:
       - "5432:5432"
-    volumes:
+    volumes:      
       - postgres_db:/var/lib/postgresql/data
+      - ./src/datastore/init.sql:/docker-entrypoint-initdb.d/init.sql
     user: postgres
+    networks:
+      - app-network
 
 volumes:
   postgres_db:
+networks:
+  app-network:
+    driver: bridge

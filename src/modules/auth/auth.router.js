@@ -8,10 +8,6 @@ import passport from "passport";
 export default function (db) {
   const router = Router();
   const users = new UserService(db);
-  const userLoginSchema = Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(6).required(),
-  }).unknown();
 
   InitPassportStrategies(users);
 
@@ -42,42 +38,7 @@ export default function (db) {
       });
     }
   });
-
-  // router.post("/login", async (req, res) => {
-  //   try {
-  //     const validation = userLoginSchema.validate(req.body);
-  //     if (validation.error) {
-  //       console.error(validation.error);
-  //       res.status(400).json({
-  //         error: "invalid user input",
-  //       });
-  //       return;
-  //     }
-  //     const { email, password: userPassword } = req.body;
-  //     const user = await users.getByEmail(email);
-  //     if (!user) {
-  //       res.status(400).json({
-  //         error: `user ${email} does not exists`,
-  //       });
-  //       return;
-  //     }
-  //     if (!(await bcrypt.compare(userPassword, user.password))) {
-  //       res.status(400).json({
-  //         error: "invalid user credentials",
-  //       });
-  //     }
-
-  //     const { password, salt, ...userDTO } = user;
-  //     req.session.user = userDTO;
-  //     res.status(200).json({
-  //       message: "successfully logged in",
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //     res.sendStatus(500);
-  //   }
-  // });
-
+  
   router.post("/login", passport.authenticate("local"), (req, res) => {
     res.status(200).json({
       message: "successfully logged in",

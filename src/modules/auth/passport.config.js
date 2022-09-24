@@ -10,7 +10,8 @@ const PROVIDERS = {
 };
 
 /**
- *
+ * InitPassportStrategies implement the passport contracts (serializeUser, deserializeUser, verifyIdentity)
+ * for this application both local and google oauth strategies are applied.
  * @param {UserService} userService
  */
 export function InitPassportStrategies(userService) {

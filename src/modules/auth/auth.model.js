@@ -64,11 +64,6 @@ export class UserService {
     return await this.db(this.tableName).where("provider_id", id).first();
   }
 
-  /**
-   *
-   * @param {UserModel} user
-   * @returns
-   */
   async insert(user) {
     const err = user.validate();
     if (err) {
