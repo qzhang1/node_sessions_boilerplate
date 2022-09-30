@@ -9,3 +9,5 @@ create table app_auth.users (
     provider varchar(50) default 'self',    
     primary key (id)
 );
+
+create index provider_id_idx ON app_auth.users (provider_id);

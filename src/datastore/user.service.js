@@ -5,7 +5,7 @@ export const UserSchema = Joi.object({
   password: Joi.string().min(6),
   salt: Joi.string(),
   roles: Joi.string(),
-  provider: Joi.string().required(),
+  provider: Joi.string(),
   provider_id: Joi.string(),
 });
 
@@ -41,14 +41,6 @@ export class UserService {
   constructor(db) {
     this.db = db;
     this.tableName = "app_auth.users";
-    this.userSchema = Joi.object({
-      email: Joi.string().required().email(),
-      password: Joi.string().min(6),
-      salt: Joi.string(),
-      roles: Joi.string(),
-      provider: Joi.string().required(),
-      provider_id: Joi.string(),
-    });
   }
 
   async getByEmail(email) {

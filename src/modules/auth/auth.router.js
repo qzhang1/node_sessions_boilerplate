@@ -1,6 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import { UserModel, UserService } from "./auth.model.js";
+import { UserModel, UserService } from "../../datastore/user.service.js";
 import Joi from "joi";
 import { InitPassportStrategies } from "./passport.config.js";
 import passport from "passport";
@@ -25,9 +25,12 @@ export default function (db) {
       const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
       const hashed_pwd = await bcrypt.hash(password, salt);
 
-      await users.insert(
+      const err = await users.insert(
         UserModel.CreateWithBasicAuth(email, hashed_pwd, salt, "user")
       );
+      if (err) {
+        throw new Error(err);
+      }
       res.json({
         message: `user ${email} has successfully registered`,
       });
@@ -38,7 +41,7 @@ export default function (db) {
       });
     }
   });
-  
+
   router.post("/login", passport.authenticate("local"), (req, res) => {
     res.status(200).json({
       message: "successfully logged in",

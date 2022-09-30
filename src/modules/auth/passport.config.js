@@ -3,7 +3,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import passport from "passport";
 import bcrypt from "bcrypt";
 
-import { UserModel } from "./auth.model.js";
+import { UserModel } from "../../datastore/user.service.js";
 
 const PROVIDERS = {
   GOOGLE: "google",

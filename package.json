@@ -2,9 +2,9 @@
   "name": "sessions",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
+    "dev": "nodemon src/servers.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
@@ -24,6 +24,7 @@
     "joi": "^17.6.0",
     "knex": "^2.3.0",
     "morgan": "^1.10.0",
+    "nodemon": "^2.0.20",
     "passport": "^0.6.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-local": "^1.0.0",

@@ -24,12 +24,21 @@ services:
       - dev.env
     ports:
       - "5432:5432"
-    volumes:      
+    volumes:
       - postgres_db:/var/lib/postgresql/data
       - ./src/datastore/init.sql:/docker-entrypoint-initdb.d/init.sql
     user: postgres
     networks:
       - app-network
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    depends_on:
+      - postgres
 
 volumes:
   postgres_db:
