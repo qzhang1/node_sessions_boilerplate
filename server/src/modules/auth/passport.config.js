@@ -52,16 +52,6 @@ export function InitPassportStrategies(userService) {
     )
   );
 
-  /**
-   * google oauth passport strategy, on google login success, verify if user already exists or
-   * should create user with oauth permissions
-   * @param {*} req
-   * @param {*} accessToken
-   * @param {*} refreshToken
-   * @param {*} profile
-   * @param {*} cb
-   * @returns
-   */
   const oauthVerifyIdentity = async (
     req,
     accessToken,
@@ -69,12 +59,6 @@ export function InitPassportStrategies(userService) {
     profile,
     cb
   ) => {
-    /**
-     * 3 scenarios
-     * - user not registered, becomes oauth registered
-     * - user already registered, does not have provider info then update record, can login either way
-     * - user already oauth registered, it's all good
-     */
     try {
       const existingUser = await userService.getByProviderId(profile.id);
       if (existingUser) {
@@ -94,12 +78,15 @@ export function InitPassportStrategies(userService) {
       cb(err, null);
     }
   };
+  const hostUrl = process.env.APP_HOST_URL;
+  const port = process.env.APP_PORT;
+  const callbackUrl = process.env.GOOGLE_OAUTH_CALLBACK_URL;
   passport.use(
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
         clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-        callbackURL: "http://localhost:4004/api/auth/google/callback",
+        callbackURL: `${hostUrl}:${port}/${callbackUrl}`,
         passReqToCallback: true,
       },
       oauthVerifyIdentity

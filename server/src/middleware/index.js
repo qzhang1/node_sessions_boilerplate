@@ -11,6 +11,7 @@ import cors from "cors";
 const redisStore = connectRedis(session);
 
 export default async function (app) {
+  const clientUrl = process.env.APP_CLIENT_URL;
   app.use(express.json());
   app.use(
     express.urlencoded({
@@ -22,7 +23,7 @@ export default async function (app) {
   app.use(helmet());
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: clientUrl,
       credentials: true,
     })
   );

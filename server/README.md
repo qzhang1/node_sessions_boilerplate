@@ -1,10 +1,13 @@
 ### Todos:
 
 - [~] add logging (added http request logs)
+- [ ] add metrics through prometheus
 - [ ] utilize knexfile for db migrations
 - [x] setup init.db on docker-compose up to initialize tables
 - [ ] benchmark tests
 - [ ] unit tests (jest+supertest)
+- [ ] add app to dockerfile
+- [ ] setup rate limiter on login (failed attempts) and ip-based throttling on other routes
 
 ### Setup:
 

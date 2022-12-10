@@ -1,7 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import { UserModel, UserService } from "../../datastore/user.service.js";
-import Joi from "joi";
 import { InitPassportStrategies } from "./passport.config.js";
 import passport from "passport";
 
@@ -16,7 +15,7 @@ export default function (db) {
       const { email, password } = req.body;
       const existingUser = await users.getByEmail(email);
       if (existingUser) {
-        res.json({
+        res.status(400).json({
           message: `user ${email} already exists`,
         });
         return;
@@ -31,7 +30,7 @@ export default function (db) {
       if (err) {
         throw new Error(err);
       }
-      res.json({
+      res.status(201).json({
         message: `user ${email} has successfully registered`,
       });
     } catch (err) {
@@ -45,6 +44,20 @@ export default function (db) {
   router.post("/login", passport.authenticate("local"), (req, res) => {
     res.status(200).json({
       message: "successfully logged in",
+    });
+  });
+
+  router.get("/logout", (req, res, next) => {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(500).json({
+          error: err,
+        });
+      } else {
+        res.json({
+          message: "successfully logged out",
+        });
+      }
     });
   });
 
