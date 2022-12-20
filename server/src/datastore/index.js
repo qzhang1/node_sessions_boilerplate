@@ -1,5 +1,6 @@
 import Joi from "joi";
 import knex from "knex";
+import { createClient } from "redis";
 
 // singleton connection pool handler
 let db;
@@ -14,7 +15,7 @@ const dbOptionSchema = Joi.object({
   }).required(),
 });
 
-export default async function InitDb(dbOptions) {
+export async function InitDb(dbOptions) {
   if (!dbOptions) {
     return null;
   }
@@ -30,4 +31,21 @@ export default async function InitDb(dbOptions) {
     console.log("initialized database...");
   }
   return db;
+}
+
+export async function InitV3RedisCache(connStr) {
+  const redisClient = createClient({
+    legacyMode: true,
+    url: connStr,
+  });
+  await redisClient.connect();
+  return redisClient;
+}
+
+export async function InitV4RedisCache(connStr) {
+  const redisClient = createClient({
+    url: connStr,
+  });
+  await redisClient.connect();
+  return redisClient;
 }

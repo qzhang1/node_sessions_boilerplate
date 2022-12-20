@@ -1,6 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import { UserModel, UserService } from "../../datastore/user.service.js";
+import { UserModel, UserService } from "../user/user.service.js";
 import { InitPassportStrategies } from "./passport.config.js";
 import passport from "passport";
 

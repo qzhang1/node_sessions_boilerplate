@@ -63,4 +63,8 @@ export class UserService {
     }
     await this.db(this.tableName).insert(user);
   }
+
+  async getAllUsers() {
+    return await this.db(this.tableName);
+  }
 }
