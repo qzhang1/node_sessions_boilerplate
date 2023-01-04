@@ -4,15 +4,12 @@ import axios from "axios";
 import { resolve, join } from "path";
 
 import InitMiddleware from "./middleware/index.js";
-import {
-  InitDb,
-  InitV3RedisCache,
-  InitV4RedisCache,
-} from "./datastore/index.js";
+import { InitDb, InitRedisCache } from "./datastore/index.js";
 import InitRoutes from "./routes.js";
 import Joi from "joi";
 import { ErrorHandle, NotFound404 } from "./middleware/error-handling.js";
 import StockService from "./modules/stocks/stock.service.js";
+import { InitMetrics, HttpMetricMiddleware } from "./shared/metrics/index.js";
 
 // select correct .env and load it
 const rootDir = resolve("./");
@@ -42,6 +39,7 @@ async function bootstrap() {
   try {
     const connStr = `redis://:${process.env.REDIS_PASSWORD}@localhost:6379`;
     const app = express();
+
     // initialize dependencies
     const dbOptions = {
       client: "pg",
@@ -54,25 +52,29 @@ async function bootstrap() {
       },
     };
     const db = await InitDb(dbOptions);
-    const sessionCache = await InitV3RedisCache(connStr);
-    const responseCache = await InitV4RedisCache(connStr);
+    const sessionCache = await InitRedisCache(connStr, true);
+    const dataCache = await InitRedisCache(connStr);
     const stockApiKey = process.env.ALPHA_VANTAGE_API_KEY;
     const alphaClient = axios.create({
       baseURL: process.env.ALPHA_VANTAGE_BASE_URL,
       timeout: parseInt(process.env.ALPHA_VANTAGE_HTTP_TIMEOUT),
     });
-    const stockService = new StockService(
-      stockApiKey,
-      alphaClient,
-      responseCache
-    );
+    const stockService = new StockService(stockApiKey, alphaClient, dataCache);
+    const { metrics, httpRequestDurationMicroseconds } = InitMetrics();
     const dependencies = {
       db,
       stockService,
+      metrics,
     };
     // pass dependencies to app middleware and routes
     await InitMiddleware(app, sessionCache);
     const router = InitRoutes(dependencies);
+    app.get("/metrics", async (req, res) => {
+      res.setHeader("Content-Type", dependencies.metrics.contentType);
+      const results = await dependencies.metrics.metrics();
+      res.end(results);
+    });
+    app.use(HttpMetricMiddleware(httpRequestDurationMicroseconds));
     app.use("/api", router);
     // important to attach these after routes to catch errors
     app.use(NotFound404);

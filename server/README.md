@@ -1,7 +1,9 @@
-### Todos:
+### Backlog:
 
+- [ ] env configurable feature flag (metrics, logging)
+- [ ] typescript migration
 - [ ] add logging (added http request logs)
-- [ ] add metrics through prometheus
+- [x] add metrics through prometheus and setup grafana dashboard
 - [ ] utilize knexfile for db migrations
 - [x] setup init.db on docker-compose up to initialize tables
 - [ ] benchmark tests

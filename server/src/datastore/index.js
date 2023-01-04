@@ -33,17 +33,9 @@ export async function InitDb(dbOptions) {
   return db;
 }
 
-export async function InitV3RedisCache(connStr) {
+export async function InitRedisCache(connStr, legacyMode = false) {
   const redisClient = createClient({
-    legacyMode: true,
-    url: connStr,
-  });
-  await redisClient.connect();
-  return redisClient;
-}
-
-export async function InitV4RedisCache(connStr) {
-  const redisClient = createClient({
+    legacyMode,
     url: connStr,
   });
   await redisClient.connect();
