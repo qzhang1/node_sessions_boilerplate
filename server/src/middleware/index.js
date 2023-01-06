@@ -3,22 +3,32 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
+import pinoHttp from "pino-http";
 
 const redisStore = connectRedis(session);
 
-export default async function (app, redisClient) {
+export default async function (app, redisClient, logger) {
   const clientUrl = process.env.APP_CLIENT_URL;
-  app.use(express.json());
+  const payloadLimit = process.env.APP_PAYLOAD_LIMIT || "50mb";
+  app.use(
+    express.json({
+      limit: payloadLimit,
+    })
+  );
   app.use(
     express.urlencoded({
       extended: true,
     })
   );
   app.use(cookieParser(process.env.COOKIE_SECRET));
-  app.use(morgan("dev"));
+
+  app.use(
+    pinoHttp({
+      logger,
+    })
+  );
   app.use(helmet());
   app.use(
     cors({

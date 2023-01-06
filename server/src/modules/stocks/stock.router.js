@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { isUserAuthenticated } from "../../middleware/auth.js";
 
-export default function (stockService) {
+export default function ({ stockService }) {
   const router = Router();
 
   router.use(isUserAuthenticated);

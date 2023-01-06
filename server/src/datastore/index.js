@@ -26,10 +26,7 @@ export async function InitDb(dbOptions) {
     return db;
   }
   db = knex(dbOptions);
-  const res = await db.raw("SELECT CURRENT_TIMESTAMP;");
-  if (res.rows.length) {
-    console.log("initialized database...");
-  }
+  await db.raw("SELECT CURRENT_TIMESTAMP;");
   return db;
 }
 

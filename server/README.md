@@ -1,10 +1,11 @@
 ### Backlog:
 
-- [ ] env configurable feature flag (metrics, logging)
+- [x] respond to SIGTERM for graceful shutdown
+- [x] env configurable request payload limits
+- [x] env configurable feature flag (metrics (prometheus))
 - [ ] typescript migration
-- [ ] add logging (added http request logs)
+- [x] add logging (added http request logs)
 - [x] add metrics through prometheus and setup grafana dashboard
-- [ ] utilize knexfile for db migrations
 - [x] setup init.db on docker-compose up to initialize tables
 - [ ] benchmark tests
 - [ ] unit tests (jest+supertest)

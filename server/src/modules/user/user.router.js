@@ -1,13 +1,11 @@
 import { Router } from "express";
-import { UserService } from "./user.service.js";
 import {
   isUserAuthenticated,
   isUserAuthorized,
 } from "../../middleware/auth.js";
 
-export default function (db) {
+export default function ({ userService }) {
   const router = Router();
-  const userService = new UserService(db);
   const adminAuthorization = isUserAuthorized("admin");
 
   router.use(isUserAuthenticated);
